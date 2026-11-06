@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.skill-lock/
+demo/work/
+
+# The lockfile at the repo root is the project's own baseline and is
+# intentionally NOT ignored — it is committed. Only the root one is
+# anchored below so example lockfiles stay committable.
+/skill-lock.json
