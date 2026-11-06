@@ -1,0 +1,19 @@
+name: skill-lock gate
+
+# Merge gate: fail the PR if any approved skill file drifted since a human
+# last approved it. Runs before the agent's pre-run hook would, so drift
+# is caught in CI instead of on a developer's machine.
+on:
+  pull_request:
+
+jobs:
+  skill-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g skill-lock
+      - run: skill-lock verify
+      - run: skill-lock check-refs --offline

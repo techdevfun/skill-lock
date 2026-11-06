@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "generatedBy": "skill-lock 0.1.0",
+  "approvedBy": "operator",
+  "approvedAt": "2026-11-06T07:43:57.609Z",
+  "skills": {
+    "pr-review": {
+      "path": "skills/pr-review",
+      "files": {
+        "SKILL.md": {
+          "sha256": "6a58f7ff98f265ac30e48c05fefa1f0bd4864bd9c6bb90fc9e58426e622c568d",
+          "size": 601
+        },
+        "scripts/check.sh": {
+          "sha256": "b7dc53f9413addfbaa8b6d45482eb30a0cb3884eaf80073ee99e8081c2107e96",
+          "size": 95
+        }
+      }
+    }
+  },
+  "files": {}
+}

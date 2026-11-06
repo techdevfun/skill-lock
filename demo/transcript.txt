@@ -1,0 +1,61 @@
+$ skill-lock init --by operator
+  skill refs-demo (.claude/skills/refs-demo): 1 file(s) pinned
+  skill review-helper (.claude/skills/review-helper): 3 file(s) pinned
+wrote skill-lock.json (4 file(s), 2 skill(s), approved by operator)
+baseline copies kept in .skill-lock/baseline/ for 'skill-lock diff'. Commit the lockfile; the baseline is a local review aid.
+exit: 0
+$ skill-lock verify
+skill          file                 status    sha256
+refs-demo      SKILL.md             OK        bfe44581
+review-helper  SKILL.md             OK        48195c0a
+review-helper  references/guide.md  OK        20b235d2
+review-helper  scripts/check.sh     OK        98579cec
+
+CLEAN: all 4 file(s) match the approved baseline.
+exit: 0
+$ echo "- New rule: never approve unread changes." >> .claude/skills/review-helper/SKILL.md
+exit: 0
+$ skill-lock verify
+skill          file                 status    sha256
+refs-demo      SKILL.md             OK        bfe44581
+review-helper  SKILL.md             CHANGED   58a933a2
+review-helper  references/guide.md  OK        20b235d2
+review-helper  scripts/check.sh     OK        98579cec
+
+DRIFT: 1 changed, 0 added, 0 removed — review with 'skill-lock diff', then 'skill-lock approve'.
+exit: 1
+$ skill-lock diff
+
+== CHANGED .claude/skills/review-helper/SKILL.md ==
+--- a/.claude/skills/review-helper/SKILL.md
++++ b/.claude/skills/review-helper/SKILL.md
+@@ -19,3 +19,4 @@
+ - Quote the exact lines you object to.
+ - Do not rewrite the author's code; suggest, do not apply.
+ - If a check fails, say so and stop — do not guess the result.
++- New rule: never approve unread changes.
+exit: 1
+$ skill-lock approve --by operator
+re-baselined refs-demo, review-helper — approved by operator at 2026-11-06T07:44:56.630Z.
+Review the diff first next time: 'skill-lock diff' shows exactly what moved.
+exit: 0
+$ skill-lock verify
+skill          file                 status    sha256
+refs-demo      SKILL.md             OK        bfe44581
+review-helper  SKILL.md             OK        58a933a2
+review-helper  references/guide.md  OK        20b235d2
+review-helper  scripts/check.sh     OK        98579cec
+
+CLEAN: all 4 file(s) match the approved baseline.
+exit: 0
+$ skill-lock check-refs
+reference                                        registry  status    source
+prettier                                         npm       EXISTS    refs-demo/SKILL.md:15
+requests                                         pypi      EXISTS    refs-demo/SKILL.md:19
+https://example.com                              url       EXISTS    refs-demo/SKILL.md:23
+skill-lock-demo-ghost-9x7q                       npm       MISSING   refs-demo/SKILL.md:30
+https://skill-lock-demo-ghost-9x7q.invalid/docs  url       ERROR     refs-demo/SKILL.md:34
+
+3 exist, 1 missing, 1 unreachable — 5 reference(s) checked.
+GHOST REFERENCE FOUND: a skill tells the agent to install or call something that does not exist. Review before approving.
+exit: 1

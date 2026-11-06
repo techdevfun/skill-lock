@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "generatedBy": "skill-lock 0.1.0",
+  "approvedBy": "operator",
+  "approvedAt": "2026-11-06T09:36:30.248Z",
+  "skills": {
+    "pr-review": {
+      "path": "examples/pr-review/skills/pr-review",
+      "files": {
+        "SKILL.md": {
+          "sha256": "6a58f7ff98f265ac30e48c05fefa1f0bd4864bd9c6bb90fc9e58426e622c568d",
+          "size": 601
+        },
+        "scripts/check.sh": {
+          "sha256": "b7dc53f9413addfbaa8b6d45482eb30a0cb3884eaf80073ee99e8081c2107e96",
+          "size": 95
+        }
+      }
+    },
+    "deploy-notes": {
+      "path": "fixtures/skills/deploy-notes",
+      "files": {
+        "SKILL.md": {
+          "sha256": "7e2aebcadb16f47bd5aba49bafc5e7d87afb49e06671daf55038b6aa814bb904",
+          "size": 374
+        }
+      }
+    },
+    "refs-demo": {
+      "path": "fixtures/skills/refs-demo",
+      "files": {
+        "SKILL.md": {
+          "sha256": "bfe44581ca8fedc63928f25225d124245766b7e829e726e3c9dfb929ee57a08a",
+          "size": 832
+        }
+      }
+    },
+    "review-helper": {
+      "path": "fixtures/skills/review-helper",
+      "files": {
+        "SKILL.md": {
+          "sha256": "48195c0ad73db7445245743411bff39324cc9f035661b43291f26c001de8118b",
+          "size": 609
+        },
+        "references/guide.md": {
+          "sha256": "20b235d2169a9a090f8e519098a4fb91f7082b6c2633676ef9ca3fc2767624b5",
+          "size": 252
+        },
+        "scripts/check.sh": {
+          "sha256": "98579ceca9fa64e182c27b041161150855f075ffdf520d79b693137c789bfd85",
+          "size": 114
+        }
+      }
+    }
+  },
+  "files": {
+    "fixtures/instructions/AGENTS.md": {
+      "sha256": "52509c088db1bfcc1485b0b27bc64de2defc7d5187b6433cf81415c421ab6ce3",
+      "size": 178
+    }
+  }
+}
