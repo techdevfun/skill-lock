@@ -5,7 +5,7 @@ this script only renders it, never edits the content."""
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-W, H = 1080, 760
+W, H = 1080, 620
 BG = (18, 18, 24)
 FG = (220, 220, 220)
 DIM = (150, 150, 160)
@@ -52,16 +52,16 @@ def color_for(line: str):
 frames = []
 canvas: list[tuple[str, tuple]] = []
 
-# Title card (3s): what the demo shows
+# Title card (1.5s): what the demo shows
 title = Image.new("RGB", (W, H), BG)
 d = ImageDraw.Draw(title)
-d.text((14, 200), "skill-lock — did the skill change since you approved it?", font=bold, fill=GREEN)
-d.text((14, 250), "1. init pins every skill file by SHA-256", font=font, fill=FG)
-d.text((14, 280), "2. verify catches a one-line edit — exit 1", font=font, fill=FG)
-d.text((14, 310), "3. diff shows the exact line; approve re-baselines", font=font, fill=FG)
-d.text((14, 340), "4. check-refs finds the package that does not exist", font=font, fill=FG)
-d.text((14, 410), "zero-dep CLI · lockfile holds hashes, never contents", font=font, fill=DIM)
-for _ in range(50):
+d.text((14, 150), "skill-lock — did the skill change since you approved it?", font=bold, fill=GREEN)
+d.text((14, 200), "1. init pins every skill file by SHA-256", font=font, fill=FG)
+d.text((14, 230), "2. verify catches a one-line edit — exit 1", font=font, fill=FG)
+d.text((14, 260), "3. diff shows the exact line; approve re-baselines", font=font, fill=FG)
+d.text((14, 290), "4. check-refs finds the package that does not exist", font=font, fill=FG)
+d.text((14, 360), "zero-dep CLI · lockfile holds hashes, never contents", font=font, fill=DIM)
+for _ in range(25):
     frames.append(title.copy())
 
 def render(canvas_tmp):
@@ -85,18 +85,18 @@ MAX_LINES = (H - 30 - 14) // LINE_H
 for line in lines:
     if len(canvas) >= MAX_LINES:
         canvas = []
-        for _ in range(6):
+        for _ in range(4):
             frames.append(render(canvas))
     color = color_for(line)
-    step = max(1, len(line) // 12)
+    step = max(1, len(line) // 5)
     for i in range(0, len(line) + 1, step):
         frames.append(render(canvas + [(line[:i], color)]))
     canvas.append((line, color))
     if line.startswith(("CLEAN", "DRIFT", "GHOST", "exit:")) or "re-baselined" in line:
-        for _ in range(14):
+        for _ in range(8):
             frames.append(frames[-1].copy())
 
-for _ in range(30):
+for _ in range(15):
     frames.append(frames[-1].copy())
 
 frames[0].save(

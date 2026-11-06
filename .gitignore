@@ -4,6 +4,7 @@ dist/
 demo/work/
 
 # The lockfile at the repo root is the project's own baseline and is
-# intentionally NOT ignored — it is committed. Only the root one is
-# anchored below so example lockfiles stay committable.
-/skill-lock.json
+# intentionally NOT ignored — it is committed and tracked, so a clone
+# keeps the dogfood baseline and `git status` shows its drift.
+# No lockfile pattern is listed here on purpose: example lockfiles
+# (e.g. examples/pr-review/skill-lock.json) stay committable too.
