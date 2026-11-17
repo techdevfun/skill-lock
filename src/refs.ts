@@ -79,23 +79,21 @@ export function extractRefs(text: string, source: string): RawRef[] {
   const lines = text.split("\n");
   lines.forEach((line, idx) => {
     const at = `${source}:${idx + 1}`;
-    // npm install / npx
-    const npmInstall = line.match(/^\s*(?:npm\s+(?:install|i)|npx)\s+(.+)$/);
-    if (npmInstall) {
-      const rest = npmInstall[1].split(/&&|\||;/)[0];
-      for (const tok of rest.split(/\s+/)) {
-        const name = cleanVersionToken(tok);
-        if (name && npmNameOk(name)) refs.push({ name, registry: "npm", source: at });
-      }
-    }
-    // pip install
-    const pipInstall = line.match(/^\s*pip3?\s+install\s+(.+)$/);
-    if (pipInstall) {
-      const rest = pipInstall[1].split(/&&|\||;/)[0];
-      for (const tok of rest.split(/\s+/)) {
-        if (tok === "-r" || tok.startsWith("-")) continue;
-        const name = cleanVersionToken(tok);
-        if (name) refs.push({ name, registry: "pypi", source: at });
+    // npm / pip install — every install command on the line, not just the
+    // first. Install lines are often chained (`npm install a && npm install
+    // b`); only reading the segment before the first shell operator let a
+    // ghost package in a later segment escape check-refs entirely.
+    for (const m of line.matchAll(/\b(npm\s+(?:install|i)|npx|pip3?\s+install)\s+([^&|;]+)/g)) {
+      const isPip = m[1].startsWith("pip");
+      for (const tok of m[2].split(/\s+/)) {
+        if (isPip) {
+          if (tok === "-r" || tok.startsWith("-")) continue;
+          const name = cleanVersionToken(tok);
+          if (name) refs.push({ name, registry: "pypi", source: at });
+        } else {
+          const name = cleanVersionToken(tok);
+          if (name && npmNameOk(name)) refs.push({ name, registry: "npm", source: at });
+        }
       }
     }
     // require('pkg')
