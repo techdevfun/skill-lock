@@ -71,6 +71,40 @@ test("invisible: tag and zero-width characters are counted and marked", () => {
   assert.equal(countInvisible("plain ascii"), 0);
 });
 
+test("refs: chained install lines check every segment, not just the first", () => {
+  // Regression: extractRefs used to read only the text before the first
+  // shell operator, so a ghost package in a later `npm/pip install`
+  // segment escaped check-refs entirely (false negative on the tool's
+  // core anti-slopsquatting promise).
+  const refs = extractRefs(
+    "npm install prettier && npm install skill-lock-demo-ghost-9x7q\n" +
+      "pip install requests; pip install no-such-pkg-9x7q\n" +
+      "npm install lodash | npm install another-ghost-9x7q\n",
+    "SKILL.md",
+  );
+  assert.deepEqual(
+    refs.map((r) => [r.name, r.registry]),
+    [
+      ["prettier", "npm"],
+      ["skill-lock-demo-ghost-9x7q", "npm"],
+      ["requests", "pypi"],
+      ["no-such-pkg-9x7q", "pypi"],
+      ["lodash", "npm"],
+      ["another-ghost-9x7q", "npm"],
+    ],
+  );
+});
+
+test("refs: chained install does not pick up non-install segments", () => {
+  // `echo done` after && is not an install command — nothing from it
+  // may become a package reference.
+  const refs = extractRefs("npm install prettier && echo done\n", "SKILL.md");
+  assert.deepEqual(
+    refs.map((r) => [r.name, r.registry]),
+    [["prettier", "npm"]],
+  );
+});
+
 test("refs: npm install lines map to the npm registry", () => {
   const refs = extractRefs("    npm install prettier\n    npm install -g typescript@5.6.3\n", "SKILL.md");
   assert.deepEqual(
